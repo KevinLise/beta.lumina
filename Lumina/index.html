@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumiera | Aromas que iluminan tus momentos</title>
+    <meta name="description" content="Aromas que iluminan tus momentos — Velas artesanales, decoración y detalles creados para llenar tu hogar de calidez y elegancia.">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>document.documentElement.classList.add('js');</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        noche: { DEFAULT: '#100e0a', deep: '#0a0907', surf: '#17140e', lift: '#1f1a12' },
+                        oro: { light: '#eed9a0', soft: '#d8b45a', DEFAULT: '#c9a227', deep: '#7d6414' },
+                        crema: '#f5f0e4',
+                        trigo: '#c9bc9a',
+                        tinta: '#191510',
+                        humo: '#57503f',
+                        arena: '#f7f2e7'
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['Montserrat', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        soft: '0 18px 45px -18px rgba(0,0,0,.8)',
+                        lift: '0 24px 60px -24px rgba(0,0,0,.85)'
+                    },
+                    transitionTimingFunction: {
+                        expo: 'cubic-bezier(.16,1,.3,1)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer components {
+            .btn-gold {
+                @apply inline-flex items-center justify-center gap-2 rounded-full bg-oro px-6 py-3 text-sm font-semibold text-noche
+                       transition-all duration-300 ease-expo hover:bg-oro-light hover:shadow-soft active:scale-[.98]
+                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-oro-deep disabled:opacity-40 disabled:pointer-events-none;
+            }
+            .btn-ghost {
+                @apply inline-flex items-center justify-center gap-2 rounded-full border border-tinta/25 px-6 py-3 text-sm font-medium text-tinta
+                       transition-all duration-300 ease-expo hover:border-tinta/45 hover:bg-tinta/5 active:scale-[.98];
+            }
+            .card {
+                @apply rounded-2xl border border-black/[.08] bg-white overflow-hidden transition-all duration-300 ease-expo;
+            }
+            .card:hover {
+                @apply border-oro/50 shadow-soft;
+            }
+            .sec-title {
+                @apply font-display text-4xl sm:text-5xl leading-[1.05] text-tinta text-balance;
+            }
+            .chip {
+                @apply rounded-full border border-black/15 px-4 py-2 text-sm text-tinta transition-all duration-200 ease-expo
+                       hover:border-oro hover:text-oro-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-oro-deep;
+            }
+            .chip[aria-pressed="true"] {
+                @apply border-oro bg-oro text-noche font-medium;
+            }
+            .tab-btn {
+                @apply px-3 py-2.5 text-sm font-medium text-humo border-b-2 border-transparent transition-colors duration-200
+                       hover:text-tinta focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-oro-deep;
+            }
+            .tab-btn[aria-selected="true"] {
+                @apply text-oro-deep border-oro-deep;
+            }
+            .field-label {
+                @apply block text-xs font-medium uppercase tracking-[.18em] text-oro-deep mb-2;
+            }
+        }
+    </style>
+
+    <style>
+        html { scroll-padding-top: 88px; }
+        ::selection { background: #c9a227; color: #100e0a; }
+        * { scrollbar-width: thin; scrollbar-color: #c9b98a #f4efe3; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #f4efe3; }
+        ::-webkit-scrollbar-thumb { background: #c9b98a; border-radius: 8px; border: 2px solid #f4efe3; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8851c; }
+        :focus-visible { outline: 2px solid #7d6414; outline-offset: 3px; }
+        body { caret-color: #7d6414; }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(26px); filter: blur(7px); }
+            to { opacity: 1; transform: none; filter: blur(0); }
+        }
+        .rise { animation: rise .95s cubic-bezier(.16,1,.3,1) both; }
+
+        .dialog { display: flex; }
+        .dialog-back { opacity: 0; transition: opacity .35s cubic-bezier(.16,1,.3,1); }
+        .dialog.is-open .dialog-back { opacity: 1; }
+        .dialog-panel { opacity: 0; transform: translateY(18px) scale(.985); transition: opacity .4s cubic-bezier(.16,1,.3,1), transform .4s cubic-bezier(.16,1,.3,1); }
+        .dialog.is-open .dialog-panel { opacity: 1; transform: none; }
+
+        .ph {
+            color: #f5f0e4;
+            background:
+                linear-gradient(158deg, #201a11 0%, #0c0a07 100%),
+                linear-gradient(120deg, rgba(216,180,90,.14) 0%, rgba(216,180,90,0) 55%),
+                linear-gradient(300deg, rgba(143,115,24,.22) 0%, rgba(143,115,24,0) 60%);
+        }
+        .ph-2 { background:
+                linear-gradient(200deg, #1a160f 0%, #0d0b08 100%),
+                linear-gradient(45deg, rgba(238,217,160,.12) 0%, rgba(238,217,160,0) 50%),
+                linear-gradient(315deg, rgba(143,115,24,.20) 0%, rgba(143,115,24,0) 55%); }
+        .ph-3 { background:
+                linear-gradient(175deg, #181410 0%, #0b0906 100%),
+                linear-gradient(90deg, rgba(201,162,39,.16) 0%, rgba(201,162,39,0) 60%),
+                linear-gradient(270deg, rgba(90,74,30,.24) 0%, rgba(90,74,30,0) 55%); }
+        .ph-4 { background:
+                linear-gradient(135deg, #1c1712 0%, #0c0a07 100%),
+                linear-gradient(225deg, rgba(238,217,160,.10) 0%, rgba(238,217,160,0) 50%),
+                linear-gradient(45deg, rgba(143,115,24,.18) 0%, rgba(143,115,24,0) 60%); }
+        .ph-5 { background:
+                linear-gradient(220deg, #191510 0%, #0a0907 100%),
+                linear-gradient(135deg, rgba(201,162,39,.14) 0%, rgba(201,162,39,0) 55%),
+                linear-gradient(315deg, rgba(120,95,28,.20) 0%, rgba(120,95,28,0) 50%); }
+        .ph-6 { background:
+                linear-gradient(145deg, #1b160f 0%, #0c0a07 100%),
+                linear-gradient(315deg, rgba(216,180,90,.13) 0%, rgba(216,180,90,0) 55%),
+                linear-gradient(45deg, rgba(143,115,24,.20) 0%, rgba(143,115,24,0) 50%); }
+
+        .acc-content { max-height: 0; overflow: hidden; transition: max-height .5s cubic-bezier(.16,1,.3,1); }
+        .acc-btn i { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+        .acc-btn[aria-expanded="true"] i { transform: rotate(180deg); }
+
+        /* revelado al entrar en vista (solo con JS; contenido visible sin él) */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+            transition-delay: var(--d, 0s);
+        }
+        .js .reveal.is-in { opacity: 1; transform: none; }
+
+        /* lift: elevación sutil en tarjetas */
+        .lift {
+            transition-property: transform, box-shadow, border-color;
+            transition-duration: .35s;
+            transition-timing-function: cubic-bezier(.16,1,.3,1);
+        }
+        .lift:hover { transform: translateY(-4px); }
+
+        /* nav: subrayado dorado que crece */
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            height: 1.5px;
+            width: 0;
+            background: #c9a227;
+            transition: width .35s cubic-bezier(.16,1,.3,1);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .rise { animation: none; }
+            .js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .lift:hover { transform: none; }
+            .nav-link::after { transition: none; }
+            html { scroll-behavior: auto; }
+        }
+
+        @keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.35); } 100% { transform: scale(1); } }
+        .bump { animation: bump .45s cubic-bezier(.16,1,.3,1); }
+
+        .tabular { font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+
+<body class="bg-white font-sans text-tinta antialiased min-h-screen overflow-x-hidden">
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="sticky top-0 z-40 border-b border-oro/10 bg-noche-deep">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+
+        <a href="#inicio" class="shrink-0" aria-label="Lumiera — inicio">
+            <img src="img/logo.svg" alt="Lumiera — Aroma y Detalles" class="h-12 w-auto transition-opacity duration-300 hover:opacity-90 md:h-14">
+        </a>
+
+        <ul class="hidden items-center gap-8 md:flex">
+            <li><a href="#inicio" class="nav-link text-sm text-trigo transition-colors hover:text-oro-light">Inicio</a></li>
+            <li><a href="#productos" class="nav-link text-sm text-trigo transition-colors hover:text-oro-light">Productos</a></li>
+            <li><a href="#nosotros" class="nav-link text-sm text-trigo transition-colors hover:text-oro-light">Nosotros</a></li>
+            <li><a href="#galeria" class="nav-link text-sm text-trigo transition-colors hover:text-oro-light">Galería</a></li>
+            <li><a href="#aromas" class="nav-link text-sm text-trigo transition-colors hover:text-oro-light">Aromas</a></li>
+            <li><a href="#contacto" class="nav-link text-sm text-trigo transition-colors hover:text-oro-light">Contacto</a></li>
+        </ul>
+
+        <div class="flex items-center gap-3">
+            <a href="#productos" class="btn-gold hidden !px-5 !py-2.5 md:inline-flex">Comprar ahora</a>
+
+            <button id="btn-hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil"
+                    class="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-oro/25 transition-colors hover:border-oro/60 md:hidden">
+                <span class="hamburger-line block h-0.5 w-5 bg-oro-soft transition-all duration-300 ease-expo"></span>
+                <span class="hamburger-line block h-0.5 w-5 bg-oro-soft transition-all duration-300 ease-expo"></span>
+                <span class="hamburger-line block h-0.5 w-5 bg-oro-soft transition-all duration-300 ease-expo"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Menú móvil -->
+    <div id="menu-movil" class="hidden flex-col gap-1 border-t border-oro/10 bg-noche-deep px-5 pb-6 pt-3 md:hidden">
+        <a href="#inicio" class="menu-link rounded-lg px-3 py-3 text-sm text-trigo transition-colors hover:bg-oro/10 hover:text-oro-light">Inicio</a>
+        <a href="#productos" class="menu-link rounded-lg px-3 py-3 text-sm text-trigo transition-colors hover:bg-oro/10 hover:text-oro-light">Productos</a>
+        <a href="#nosotros" class="menu-link rounded-lg px-3 py-3 text-sm text-trigo transition-colors hover:bg-oro/10 hover:text-oro-light">Nosotros</a>
+        <a href="#galeria" class="menu-link rounded-lg px-3 py-3 text-sm text-trigo transition-colors hover:bg-oro/10 hover:text-oro-light">Galería</a>
+        <a href="#aromas" class="menu-link rounded-lg px-3 py-3 text-sm text-trigo transition-colors hover:bg-oro/10 hover:text-oro-light">Aromas</a>
+        <a href="#contacto" class="menu-link rounded-lg px-3 py-3 text-sm text-trigo transition-colors hover:bg-oro/10 hover:text-oro-light">Contacto</a>
+        <a href="#productos" class="menu-link btn-gold mt-3">Comprar ahora</a>
+    </div>
+</header>
+
+<main>
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section id="inicio" class="relative overflow-hidden">
+        <div class="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-16 pt-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:pb-24 lg:pt-20">
+
+            <div class="hero-texto">
+                <span class="rise block text-xs font-medium uppercase tracking-[.28em] text-oro-deep" style="animation-delay:.05s">VELAS ARTESANALES</span>
+
+                <h1 class="rise mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.05] text-tinta text-balance" style="animation-delay:.15s">
+                    Transformamos espacios en momentos inolvidables.
+                </h1>
+
+                <p class="rise mt-6 max-w-xl text-base leading-relaxed text-humo" style="animation-delay:.28s">
+                    Velas artesanales, decoración y detalles creados para llenar tu hogar de calidez, elegancia y momentos que perduran.
+                </p>
+
+                <div class="rise mt-8 flex flex-wrap gap-4" style="animation-delay:.4s">
+                    <a href="#productos" class="btn-gold">Descubrir colección</a>
+                    <a href="#nosotros" class="btn-ghost">Nuestra historia</a>
+                </div>
+
+                <ul class="rise mt-10 flex flex-wrap gap-x-7 gap-y-3" style="animation-delay:.55s">
+                    <li class="flex items-center gap-2.5 text-sm text-humo"><i class="fa-solid fa-fire w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Artesanal</li>
+                    <li class="flex items-center gap-2.5 text-sm text-humo"><i class="fa-solid fa-leaf w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Materiales cuidadosamente seleccionados</li>
+                    <li class="flex items-center gap-2.5 text-sm text-humo"><i class="fa-solid fa-couch w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Diseños para transformar espacios</li>
+                    <li class="flex items-center gap-2.5 text-sm text-humo"><i class="fa-solid fa-gift w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Regalos con significado</li>
+                </ul>
+            </div>
+
+            <div class="rise relative" style="animation-delay:.35s">
+                <div class="group relative aspect-[4/5] max-h-[560px] overflow-hidden rounded-2xl border border-black/[.08] shadow-lift">
+                    <div class="ph absolute inset-0 flex flex-col items-center justify-center gap-4">
+                        <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-24 w-24 opacity-80">
+                            <path d="M32 9c4.5 6.5 7.5 9.5 7.5 14.5a7.5 7.5 0 1 1-15 0C24.5 18.5 27.5 15.5 32 9z"/>
+                            <line x1="32" y1="25" x2="32" y2="31"/>
+                            <rect x="23" y="31" width="18" height="24" rx="3"/>
+                            <line x1="27" y1="39" x2="37" y2="39"/>
+                        </svg>
+                        <span class="font-display text-xl italic text-oro-light">Aromas que iluminan tus momentos</span>
+                    </div>
+                    <img src="img/hero.jpg" alt="Velas artesanales Lumiera" class="relative h-full w-full object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.03]" onerror="this.remove()">
+                </div>
+                <div class="absolute -bottom-5 -left-5 hidden rounded-2xl border border-oro/25 bg-noche-surf px-6 py-4 shadow-soft sm:block" aria-hidden="true">
+                    <p class="font-display text-lg text-oro-light">Elaboración artesanal</p>
+                    <p class="text-xs text-trigo">Pieza por pieza, con dedicación</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ COLECCIONES ═══════════ -->
+    <section id="productos" class="border-t border-black/[.06] bg-arena py-20 lg:py-24">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <div class="reveal mx-auto max-w-2xl text-center">
+                <span class="block text-xs font-medium uppercase tracking-[.28em] text-oro-deep">NUESTRAS COLECCIONES</span>
+                <h2 class="sec-title text-4xl sm:text-5xl mt-4">Encuentra la colección perfecta</h2>
+                <p class="mt-4 text-base leading-relaxed text-humo text-pretty">
+                    Explora nuestras categorías y descubre productos diseñados para cada ocasión.
+                </p>
+            </div>
+
+            <div data-reveal-group class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                <a href="#catalogo" class="card group lift" data-coleccion="souvenirs">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                        <div class="ph absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-14 w-14 opacity-70"><path d="M32 9c4.5 6.5 7.5 9.5 7.5 14.5a7.5 7.5 0 1 1-15 0C24.5 18.5 27.5 15.5 32 9z"/><line x1="32" y1="25" x2="32" y2="31"/><rect x="23" y="31" width="18" height="24" rx="3"/></svg>
+                        </div>
+                        <img src="img/souvenirs-&-recordatorios.jpg" alt="Souvenirs &amp; Recordatorios" class="relative h-full w-full object-cover transition-transform duration-500 ease-expo group-hover:scale-[1.05]" onerror="this.remove()">
+                        <span class="absolute left-3 top-3 rounded-full bg-noche-deep/85 px-3 py-1 text-[11px] font-medium text-oro-light backdrop-blur-sm">Souvenirs</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-display text-2xl text-tinta transition-colors group-hover:text-oro-deep">Souvenirs &amp; Recordatorios</h3>
+                        <p class="mt-1.5 text-sm text-humo">Recuerdos y detalles personalizados.</p>
+                    </div>
+                </a>
+
+                <a href="#catalogo" class="card group lift" data-coleccion="ramilletes">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                        <div class="ph-2 absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-14 w-14 opacity-70"><circle cx="32" cy="26" r="10"/><line x1="32" y1="36" x2="32" y2="54"/><path d="M24 46c4-3 6-6 8-10M40 46c-4-3-6-6-8-10"/></svg>
+                        </div>
+                        <img src="img/ramilletes-ramos-y-bouquet.png" alt="Ramilletes, Ramos y Bouquet" class="relative h-full w-full object-cover transition-transform duration-500 ease-expo group-hover:scale-[1.05]" onerror="this.remove()">
+                        <span class="absolute left-3 top-3 rounded-full bg-noche-deep/85 px-3 py-1 text-[11px] font-medium text-oro-light backdrop-blur-sm">Ramilletes</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-display text-2xl text-tinta transition-colors group-hover:text-oro-deep">Ramilletes, Ramos y Bouquet</h3>
+                        <p class="mt-1.5 text-sm text-humo">Detalles que enamoran.</p>
+                    </div>
+                </a>
+
+                <a href="#catalogo" class="card group lift" data-coleccion="velas-decoraciones">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                        <div class="ph-3 absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-14 w-14 opacity-70"><path d="M32 9c4.5 6.5 7.5 9.5 7.5 14.5a7.5 7.5 0 1 1-15 0C24.5 18.5 27.5 15.5 32 9z"/><line x1="32" y1="25" x2="32" y2="31"/><rect x="23" y="31" width="18" height="24" rx="3"/></svg>
+                        </div>
+                        <img src="img/velas-&-decoraciones.jpg" alt="Velas &amp; Decoraciones" class="relative h-full w-full object-cover transition-transform duration-500 ease-expo group-hover:scale-[1.05]" onerror="this.remove()">
+                        <span class="absolute left-3 top-3 rounded-full bg-noche-deep/85 px-3 py-1 text-[11px] font-medium text-oro-light backdrop-blur-sm">Velas</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-display text-2xl text-tinta transition-colors group-hover:text-oro-deep">Velas &amp; Decoraciones</h3>
+                        <p class="mt-1.5 text-sm text-humo">Recuerdos y detalles personalizados.</p>
+                    </div>
+                </a>
+
+                <a href="#catalogo" class="card group lift" data-coleccion="waxmelts">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                        <div class="ph-4 absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-14 w-14 opacity-70"><rect x="16" y="24" width="14" height="14" rx="3"/><rect x="34" y="24" width="14" height="14" rx="3"/><rect x="25" y="40" width="14" height="14" rx="3"/></svg>
+                        </div>
+                        <img src="img/wax-melts-&-wax-sachets.jpg" alt="Wax Melts &amp; Wax Sachets" class="relative h-full w-full object-cover transition-transform duration-500 ease-expo group-hover:scale-[1.05]" onerror="this.remove()">
+                        <span class="absolute left-3 top-3 rounded-full bg-noche-deep/85 px-3 py-1 text-[11px] font-medium text-oro-light backdrop-blur-sm">Wax Melts</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-display text-2xl text-tinta transition-colors group-hover:text-oro-deep">Wax Melts &amp; Wax Sachets</h3>
+                        <p class="mt-1.5 text-sm text-humo">Recuerdos y detalles personalizados.</p>
+                    </div>
+                </a>
+
+                <a href="#catalogo" class="card group lift" data-coleccion="gourmet">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                        <div class="ph-5 absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-14 w-14 opacity-70"><path d="M20 30h20a4 4 0 0 1 0 8h-2"/><path d="M20 30v10a10 10 0 0 0 10 10h2a10 10 0 0 0 10-10V30"/><path d="M24 22c0-3 2-3 2-6M32 22c0-3 2-3 2-6M40 22c0-3 2-3 2-6"/></svg>
+                        </div>
+                        <img src="img/velas-gourmet.jpg" alt="Velas Gourmet" class="relative h-full w-full object-cover transition-transform duration-500 ease-expo group-hover:scale-[1.05]" onerror="this.remove()">
+                        <span class="absolute left-3 top-3 rounded-full bg-noche-deep/85 px-3 py-1 text-[11px] font-medium text-oro-light backdrop-blur-sm">Gourmet</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-display text-2xl text-tinta transition-colors group-hover:text-oro-deep">Velas Gourmet</h3>
+                        <p class="mt-1.5 text-sm text-humo">Recuerdos y detalles personalizados.</p>
+                    </div>
+                </a>
+
+                <a href="#catalogo" class="card group lift" data-coleccion="fechas">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                        <div class="ph-6 absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-14 w-14 opacity-70"><rect x="16" y="18" width="32" height="32" rx="4"/><line x1="16" y1="28" x2="48" y2="28"/><line x1="26" y1="14" x2="26" y2="22"/><line x1="38" y1="14" x2="38" y2="22"/><path d="M26 38l4 4 8-8"/></svg>
+                        </div>
+                        <img src="img/fechas-especiales.jpg" alt="Fechas Especiales" class="relative h-full w-full object-cover transition-transform duration-500 ease-expo group-hover:scale-[1.05]" onerror="this.remove()">
+                        <span class="absolute left-3 top-3 rounded-full bg-noche-deep/85 px-3 py-1 text-[11px] font-medium text-oro-light backdrop-blur-sm">Fechas</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-display text-2xl text-tinta transition-colors group-hover:text-oro-deep">Fechas Especiales</h3>
+                        <p class="mt-1.5 text-sm text-humo">Recuerdos y detalles personalizados.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ CATÁLOGO INTERACTIVO ═══════════ -->
+    <section id="catalogo" class="border-t border-black/[.06] py-20 lg:py-24">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <div class="reveal mx-auto max-w-2xl text-center">
+                <h2 class="sec-title text-4xl sm:text-5xl">Catálogo Lumiera</h2>
+                <p class="mt-4 text-base leading-relaxed text-humo text-pretty">
+                    Selecciona un producto para ver su detalle, elegir variantes y agregarlo a tu pedido.
+                </p>
+            </div>
+
+            <div id="filtros" class="reveal mt-10 flex flex-wrap justify-center gap-3" role="group" aria-label="Filtrar por colección">
+                <button type="button" class="chip" data-filtro="todas" aria-pressed="true">Todas</button>
+                <button type="button" class="chip" data-filtro="souvenirs" aria-pressed="false">Souvenirs</button>
+                <button type="button" class="chip" data-filtro="ramilletes" aria-pressed="false">Ramilletes</button>
+                <button type="button" class="chip" data-filtro="velas-decoraciones" aria-pressed="false">Velas</button>
+                <button type="button" class="chip" data-filtro="waxmelts" aria-pressed="false">Wax Melts</button>
+                <button type="button" class="chip" data-filtro="gourmet" aria-pressed="false">Gourmet</button>
+                <button type="button" class="chip" data-filtro="fechas" aria-pressed="false">Fechas</button>
+            </div>
+
+            <div id="grid-productos" class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"></div>
+
+            <noscript>
+                <p class="mt-8 rounded-xl border border-black/12 bg-white p-6 text-center text-sm text-humo">
+                    Activa JavaScript para ver el catálogo interactivo y el carrito de pedidos.
+                </p>
+            </noscript>
+        </div>
+    </section>
+
+    <!-- ═══════════ NOSOTROS ═══════════ -->
+    <section class="border-t border-black/[.06] bg-arena py-20 lg:py-24" id="nosotros">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <div class="reveal mx-auto max-w-2xl text-center">
+                <span class="block text-xs font-medium uppercase tracking-[.28em] text-oro-deep">NUESTRA ESENCIA</span>
+                <h2 class="sec-title text-4xl sm:text-5xl mt-4">Creamos detalles que cuentan historias</h2>
+                <p class="mt-4 text-base leading-relaxed text-humo text-pretty">
+                    En Lumiera creemos que los momentos más importantes merecen detalles únicos. Cada una de nuestras creaciones nace de la dedicación, la creatividad y el deseo de transformar una idea en un recuerdo inolvidable.
+                </p>
+            </div>
+
+            <div class="mt-14 grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-black/[.08] bg-white shadow-soft">
+                    <img src="img/equipo.jpg" alt="Equipo Lumiera" class="relative h-full w-full object-contain transition-transform duration-700 ease-expo group-hover:scale-[1.03]" onerror="this.remove()">
+                </div>
+
+                <div data-reveal-group class="flex flex-col gap-7">
+                    <div>
+                        <h3 class="flex items-center gap-2.5 font-display text-2xl text-oro-deep"><i class="fa-solid fa-hammer w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Elaboración artesanal</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-humo">Cada pieza es elaborada cuidadosamente para ofrecer un acabado único.</p>
+                    </div>
+                    <div class="border-t border-black/[.06] pt-7">
+                        <h3 class="flex items-center gap-2.5 font-display text-2xl text-oro-deep"><i class="fa-solid fa-palette w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Personalización</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-humo">Adaptamos colores, aromas y detalles para cada ocasión especial.</p>
+                    </div>
+                    <div class="border-t border-black/[.06] pt-7">
+                        <h3 class="flex items-center gap-2.5 font-display text-2xl text-oro-deep"><i class="fa-solid fa-heart w-4 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Calidad y dedicación</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-humo">Cuidamos cada proceso para entregar productos con excelente presentación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div data-reveal-group class="mt-14 grid gap-6 md:grid-cols-2">
+                <div class="card lift p-7">
+                    <h3 class="font-display text-2xl text-tinta">Nuestra misión</h3>
+                    <p class="mt-3 text-sm leading-relaxed text-humo text-pretty">
+                        Crear detalles personalizados que acompañen los momentos más importantes de nuestros clientes, ofreciendo calidad, creatividad y dedicación en cada pieza.
+                    </p>
+                </div>
+                <div class="card lift p-7">
+                    <h3 class="font-display text-2xl text-tinta">Nuestra visión</h3>
+                    <p class="mt-3 text-sm leading-relaxed text-humo text-pretty">
+                        Ser una marca reconocida por la calidad, el diseño y la personalización de nuestros productos, llevando los detalles de Lumiera a cada vez más personas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ GALERÍA ═══════════ -->
+    <section id="galeria"></section>
+
+    <!-- ═══════════ AROMAS ═══════════ -->
+    <section id="aromas" class="border-t border-black/[.06] py-20 lg:py-24">
+        <div class="mx-auto max-w-4xl px-5 lg:px-8">
+            <div class="reveal mx-auto max-w-2xl text-center">
+                <span class="block text-xs font-medium uppercase tracking-[.28em] text-oro-deep">FRAGANCIAS LUMIERA</span>
+                <h2 class="sec-title text-4xl sm:text-5xl mt-4">Cada aroma cuenta una historia</h2>
+                <p class="mt-4 text-base leading-relaxed text-humo text-pretty">
+                    Descubre nuestra colección de fragancias cuidadosamente seleccionadas para convertir cada detalle en una experiencia inolvidable.
+                </p>
+            </div>
+
+            <div data-reveal-group class="mt-12 flex flex-col gap-4" id="acordeon-aromas">
+
+                <div class="card">
+                    <button type="button" class="acc-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-black/[.04]" aria-expanded="true" aria-controls="aroma-1" id="accbtn-1">
+                        <span class="flex items-center gap-2.5 font-display text-2xl text-tinta"><i class="fa-solid fa-cookie w-5 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Dulces</span>
+                        <i class="fa-solid fa-chevron-down text-oro-deep" aria-hidden="true"></i>
+                    </button>
+                    <div class="acc-content" id="aroma-1" role="region" aria-labelledby="accbtn-1">
+                        <p class="px-6 pb-6 text-sm leading-relaxed text-humo text-pretty">
+                            Avena Miel • Chicle • Galleta de Jengibre • Bombón • Natilla • Café Avellana • Coco Cream • Leche de Almendras • Clavo Vainilla
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button type="button" class="acc-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-black/[.04]" aria-expanded="false" aria-controls="aroma-2" id="accbtn-2">
+                        <span class="flex items-center gap-2.5 font-display text-2xl text-tinta"><i class="fa-solid fa-apple-whole w-5 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Frutales</span>
+                        <i class="fa-solid fa-chevron-down text-oro-deep" aria-hidden="true"></i>
+                    </button>
+                    <div class="acc-content" id="aroma-2" role="region" aria-labelledby="accbtn-2">
+                        <p class="px-6 pb-6 text-sm leading-relaxed text-humo text-pretty">
+                            Maracuyá • Frutos Rojos • Sandía • Manzana Verde • Mango y Lychee • Sueño Tropical • Maracumango • Piña Colada • Mora Azul • Durazno • Coco Piña • Banano • Cereza Japonesa
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button type="button" class="acc-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-black/[.04]" aria-expanded="false" aria-controls="aroma-3" id="accbtn-3">
+                        <span class="flex items-center gap-2.5 font-display text-2xl text-tinta"><i class="fa-solid fa-spa w-5 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Florales</span>
+                        <i class="fa-solid fa-chevron-down text-oro-deep" aria-hidden="true"></i>
+                    </button>
+                    <div class="acc-content" id="aroma-3" role="region" aria-labelledby="accbtn-3">
+                        <p class="px-6 pb-6 text-sm leading-relaxed text-humo text-pretty">
+                            Flor de Amapola • Flores Blancas • Flor de Uva • Verbena Rosada
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button type="button" class="acc-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-black/[.04]" aria-expanded="false" aria-controls="aroma-4" id="accbtn-4">
+                        <span class="flex items-center gap-2.5 font-display text-2xl text-tinta"><i class="fa-solid fa-tree w-5 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Amaderados</span>
+                        <i class="fa-solid fa-chevron-down text-oro-deep" aria-hidden="true"></i>
+                    </button>
+                    <div class="acc-content" id="aroma-4" role="region" aria-labelledby="accbtn-4">
+                        <p class="px-6 pb-6 text-sm leading-relaxed text-humo text-pretty">
+                            Palo Santo • Sándalo
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button type="button" class="acc-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-black/[.04]" aria-expanded="false" aria-controls="aroma-5" id="accbtn-5">
+                        <span class="flex items-center gap-2.5 font-display text-2xl text-tinta"><i class="fa-solid fa-lemon w-5 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Frescos &amp; Cítricos</span>
+                        <i class="fa-solid fa-chevron-down text-oro-deep" aria-hidden="true"></i>
+                    </button>
+                    <div class="acc-content" id="aroma-5" role="region" aria-labelledby="accbtn-5">
+                        <p class="px-6 pb-6 text-sm leading-relaxed text-humo text-pretty">
+                            Manzana Canela • Lima Limón • Brisa Marina • Bergamota
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button type="button" class="acc-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-black/[.04]" aria-expanded="false" aria-controls="aroma-6" id="accbtn-6">
+                        <span class="flex items-center gap-2.5 font-display text-2xl text-tinta"><i class="fa-solid fa-gem w-5 shrink-0 text-center text-oro-deep" aria-hidden="true"></i> Exclusivos</span>
+                        <i class="fa-solid fa-chevron-down text-oro-deep" aria-hidden="true"></i>
+                    </button>
+                    <div class="acc-content" id="aroma-6" role="region" aria-labelledby="accbtn-6">
+                        <p class="px-6 pb-6 text-sm leading-relaxed text-humo text-pretty">
+                            Amyman • Talco Bebé • Whisky Orange • Fiesta de Champán
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ CONTACTO ═══════════ -->
+    <section class="border-t border-black/[.06] bg-arena py-20 lg:py-24" id="contacto">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <div class="reveal mx-auto max-w-2xl text-center">
+                <span class="block text-xs font-medium uppercase tracking-[.28em] text-oro-deep">CONECTEMOS</span>
+                <h2 class="sec-title text-4xl sm:text-5xl mt-4">Estamos cerca de ti</h2>
+                <p class="mt-4 text-base leading-relaxed text-humo text-pretty">
+                    Síguenos en nuestras redes sociales y descubre nuestras últimas creaciones.
+                </p>
+            </div>
+
+            <div data-reveal-group class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <a href="https://wa.me/MI_NUMERO" target="_blank" rel="noopener" data-wa class="card group lift p-6 text-center">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-black/10 text-2xl text-oro-deep transition-all duration-300 group-hover:scale-110 group-hover:border-oro group-hover:bg-oro/10">
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="mt-4 font-display text-xl text-tinta">WhatsApp</h3>
+                    <p class="mt-1.5 text-sm text-humo">Escríbenos y recibe atención personalizada.</p>
+                </a>
+
+                <a href="https://instagram.com/TU_USUARIO" target="_blank" rel="noopener" class="card group lift p-6 text-center">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-black/10 text-2xl text-oro-deep transition-all duration-300 group-hover:scale-110 group-hover:border-oro group-hover:bg-oro/10">
+                        <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="mt-4 font-display text-xl text-tinta">Instagram</h3>
+                    <p class="mt-1.5 text-sm text-humo">Descubre nuestras últimas creaciones.</p>
+                </a>
+
+                <a href="https://facebook.com/TU_PAGINA" target="_blank" rel="noopener" class="card group lift p-6 text-center">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-black/10 text-2xl text-oro-deep transition-all duration-300 group-hover:scale-110 group-hover:border-oro group-hover:bg-oro/10">
+                        <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="mt-4 font-display text-xl text-tinta">Facebook</h3>
+                    <p class="mt-1.5 text-sm text-humo">Conoce nuestras novedades y promociones.</p>
+                </a>
+
+                <a href="https://tiktok.com/@TU_USUARIO" target="_blank" rel="noopener" class="card group lift p-6 text-center">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-black/10 text-2xl text-oro-deep transition-all duration-300 group-hover:scale-110 group-hover:border-oro group-hover:bg-oro/10">
+                        <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="mt-4 font-display text-xl text-tinta">TikTok</h3>
+                    <p class="mt-1.5 text-sm text-humo text-pretty">Inspírate con nuestras ideas y videos.</p>
+                </a>
+            </div>
+
+            <div class="reveal mx-auto mt-16 max-w-3xl rounded-2xl border border-black/12 bg-white px-7 py-12 text-center shadow-soft sm:px-12">
+                <h2 class="font-display text-3xl text-tinta sm:text-4xl">Haz realidad ese detalle que imaginas.</h2>
+                <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-humo">
+                    Cuéntanos tu idea y crearemos una pieza personalizada para hacer de tu ocasión un momento inolvidable.
+                </p>
+                <a href="https://wa.me/MI_NUMERO?text=Hola,%20vi%20la%20página%20de%20Lumiera%20y%20me%20gustaría%20solicitar%20información."
+                   target="_blank" rel="noopener" data-wa data-wa-text="Hola, vi la página de Lumiera y me gustaría solicitar información."
+                   class="btn-gold mt-7">
+                    <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>
+                    Solicitar por WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="border-t border-oro/10 bg-noche-deep py-14">
+    <div class="mx-auto max-w-7xl px-5 text-center lg:px-8">
+        <img src="img/logo.svg" alt="Lumiera — Aroma y Detalles" class="mx-auto h-24 w-auto">
+        <p class="mt-4 font-display text-xl italic text-oro-light">Aromas que iluminan tus momentos</p>
+        <p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-trigo">
+            Cada detalle cuenta una historia. Gracias por permitirnos ser parte de la tuya.
+        </p>
+
+        <div class="mt-7 flex justify-center gap-4">
+            <a href="#" aria-label="WhatsApp" class="flex h-11 w-11 items-center justify-center rounded-full border border-oro/25 text-oro-soft transition-all duration-300 hover:-translate-y-1 hover:border-oro hover:bg-oro/10 hover:text-oro-light"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#" aria-label="Instagram" class="flex h-11 w-11 items-center justify-center rounded-full border border-oro/25 text-oro-soft transition-all duration-300 hover:-translate-y-1 hover:border-oro hover:bg-oro/10 hover:text-oro-light"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook" class="flex h-11 w-11 items-center justify-center rounded-full border border-oro/25 text-oro-soft transition-all duration-300 hover:-translate-y-1 hover:border-oro hover:bg-oro/10 hover:text-oro-light"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="TikTok" class="flex h-11 w-11 items-center justify-center rounded-full border border-oro/25 text-oro-soft transition-all duration-300 hover:-translate-y-1 hover:border-oro hover:bg-oro/10 hover:text-oro-light"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+
+        <p class="mt-8 text-xs text-trigo/70">© 2026 Lumiera · Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<!-- ═══════════ BOTÓN CARRITO FLOTANTE ═══════════ -->
+<button id="btn-carrito" type="button" aria-label="Ver tu pedido"
+        class="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-oro text-noche shadow-lift transition-all duration-300 ease-expo hover:bg-oro-light hover:scale-105 active:scale-95">
+    <i class="fa-solid fa-bag-shopping text-lg" aria-hidden="true"></i>
+    <span id="badge-carrito" class="absolute -right-1 -top-1 hidden min-w-[22px] rounded-full border-2 border-noche bg-noche-deep px-1.5 py-0.5 text-[11px] font-semibold text-oro-light tabular">0</span>
+</button>
+
+<!-- ═══════════ MODAL DETALLE DE PRODUCTO ═══════════ -->
+<div id="modal-producto" class="dialog hidden fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6" aria-hidden="true">
+    <div class="dialog-back fixed inset-0 bg-black/75 backdrop-blur-sm" data-cerrar></div>
+
+    <div role="dialog" aria-modal="true" aria-labelledby="modal-nombre"
+         class="dialog-panel relative my-auto w-full max-w-5xl rounded-2xl border border-black/[.08] bg-white shadow-lift">
+
+        <button type="button" id="modal-cerrar" data-cerrar
+                class="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-black/12 bg-arena/80 text-oro-deep transition-colors hover:border-oro hover:text-oro-deep"
+                aria-label="Cerrar detalle">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+
+        <div class="grid md:grid-cols-2">
+            <!-- Galería -->
+            <div class="flex gap-3 rounded-t-2xl bg-arena p-4 md:rounded-l-2xl md:rounded-tr-none md:p-6">
+                <div id="modal-thumbs" class="order-2 flex shrink-0 gap-2 md:order-1 md:flex-col"></div>
+                <div id="modal-imagen" class="ph order-1 flex min-h-[240px] flex-1 items-center justify-center rounded-xl border border-black/[.06] md:order-2 md:min-h-[420px]">
+                    <svg viewBox="0 0 64 64" fill="none" stroke="#d8b45a" stroke-width="1.5" stroke-linecap="round" class="h-16 w-16 opacity-70"><path d="M32 9c4.5 6.5 7.5 9.5 7.5 14.5a7.5 7.5 0 1 1-15 0C24.5 18.5 27.5 15.5 32 9z"/><line x1="32" y1="25" x2="32" y2="31"/><rect x="23" y="31" width="18" height="24" rx="3"/></svg>
+                </div>
+            </div>
+
+            <!-- Panel de compra -->
+            <div class="flex flex-col gap-6 p-5 md:p-7">
+                <div>
+                    <h3 id="modal-nombre" class="font-display text-3xl leading-tight text-tinta md:text-4xl"></h3>
+                    <p id="modal-precio" class="mt-2 text-3xl font-semibold text-oro-deep tabular"></p>
+                </div>
+
+                <div id="modal-variantes" class="flex flex-col gap-4"></div>
+
+                <div class="flex items-center gap-4">
+                    <span class="field-label !mb-0">Cantidad</span>
+                    <div class="flex items-center gap-1 rounded-full border border-black/12 p-1">
+                        <button type="button" id="qty-menos" aria-label="Quitar uno" class="flex h-9 w-9 items-center justify-center rounded-full text-oro-deep transition-colors hover:bg-black/[.06] hover:text-oro-deep"><i class="fa-solid fa-minus text-xs"></i></button>
+                        <span id="qty-valor" class="w-9 text-center text-sm font-semibold text-tinta tabular" aria-live="polite">1</span>
+                        <button type="button" id="qty-mas" aria-label="Agregar uno" class="flex h-9 w-9 items-center justify-center rounded-full text-oro-deep transition-colors hover:bg-black/[.06] hover:text-oro-deep"><i class="fa-solid fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+
+                <button type="button" id="btn-agregar" class="btn-gold w-full !py-3.5">
+                    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                    <span id="agregar-texto">Agregar al pedido</span>
+                </button>
+
+                <!-- Pestañas -->
+                <div class="mt-1 border-t border-black/[.08] pt-2">
+                    <div role="tablist" aria-label="Información del producto" class="flex gap-1 border-b border-black/[.08]">
+                        <button type="button" class="tab-btn" role="tab" aria-selected="true" data-tab="desc" id="tab-desc">Descripción</button>
+                        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="specs" id="tab-specs">Especificaciones</button>
+                        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="tiempos" id="tab-tiempos">Tiempos</button>
+                    </div>
+                    <div id="panel-desc" role="tabpanel" aria-labelledby="tab-desc" class="pt-4 text-sm leading-relaxed text-humo"></div>
+                    <div id="panel-specs" role="tabpanel" aria-labelledby="tab-specs" class="hidden pt-4" ></div>
+                    <div id="panel-tiempos" role="tabpanel" aria-labelledby="tab-tiempos" class="hidden pt-4 text-sm leading-relaxed text-humo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ CARRITO / RESUMEN DE PEDIDO ═══════════ -->
+<div id="panel-carrito" class="dialog hidden fixed inset-0 z-50" aria-hidden="true">
+    <div class="dialog-back absolute inset-0 bg-black/70 backdrop-blur-sm" data-cerrar></div>
+
+    <aside role="dialog" aria-modal="true" aria-labelledby="carrito-titulo"
+           class="dialog-panel absolute right-0 top-0 flex h-full w-full flex-col border-l border-black/[.08] bg-white shadow-lift sm:w-[430px]">
+        <header class="flex items-center justify-between border-b border-black/[.08] px-5 py-4">
+            <h2 id="carrito-titulo" class="font-display text-2xl text-tinta">Tu pedido</h2>
+            <button type="button" data-cerrar class="flex h-10 w-10 items-center justify-center rounded-full border border-black/12 text-oro-deep transition-colors hover:border-oro hover:text-oro-deep" aria-label="Cerrar pedido">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+
+        <div id="carrito-vacio" class="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full border border-black/12 text-2xl text-oro-deep/70">
+                <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            </div>
+            <p class="text-sm leading-relaxed text-humo">Tu pedido está vacío.<br>Explora el catálogo y agrega productos para armar tu pedido.</p>
+            <button type="button" data-cerrar class="btn-ghost !px-5 !py-2.5 text-xs">Ver catálogo</button>
+        </div>
+
+        <ul id="lista-carrito" class="hidden flex-1 flex-col gap-3 overflow-y-auto p-5"></ul>
+
+        <footer class="border-t border-black/[.08] bg-arena px-5 py-5">
+            <div class="mb-4 flex items-center justify-between">
+                <span class="text-sm text-humo">Total estimado</span>
+                <span id="carrito-total" class="font-display text-2xl font-semibold text-oro-deep tabular">$0</span>
+            </div>
+            <p class="mb-4 text-xs leading-relaxed text-humo/80">
+                El costo de envío y los tiempos de entrega se acuerdan directamente por WhatsApp.
+            </p>
+            <button type="button" id="btn-whatsapp" class="btn-gold w-full" disabled>
+                <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>
+                Enviar pedido por WhatsApp
+            </button>
+        </footer>
+    </aside>
+</div>
+
+<div id="aviso" class="pointer-events-none fixed left-1/2 top-6 z-[60] -translate-x-1/2 rounded-full border border-oro/40 bg-noche-deep px-5 py-2.5 text-sm text-oro-light opacity-0 shadow-soft transition-all duration-300 ease-expo" role="status" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
